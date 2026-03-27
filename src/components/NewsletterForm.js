@@ -1,5 +1,5 @@
 /**
- * NewsletterForm — Reusable email capture form component
+ * NewsletterForm — Glass-styled email capture form component
  * Used in Hero section and CTA section with different variants
  */
 
@@ -15,17 +15,17 @@ import { showToast } from './Toast.js';
 export function renderNewsletterForm(variant = 'hero', formId = 'form-hero') {
   if (variant === 'cta') {
     return `
-      <form id="${formId}" class="flex flex-col sm:flex-row gap-0 w-full max-w-lg mx-auto shadow-2xl" novalidate>
+      <form id="${formId}" class="flex flex-col sm:flex-row gap-3 w-full max-w-lg mx-auto" novalidate>
         <input
           type="email"
           placeholder="Tu mejor correo electrónico"
           required
           aria-label="Correo electrónico"
-          class="w-full py-4 px-6 bg-neutral-100 text-primary border-none focus:outline-none font-sans rounded-none"
+          class="input-glass w-full py-4 px-6 font-sans text-sm rounded-xl"
         >
         <button
           type="submit"
-          class="bg-secondary text-neutral-100 px-8 py-4 font-sans font-semibold tracking-editorial uppercase text-xs whitespace-nowrap hover:bg-[#5a252b] transition-colors rounded-none flex items-center justify-center gap-2"
+          class="btn-glass px-8 py-4 font-sans font-semibold tracking-editorial uppercase text-xs whitespace-nowrap rounded-xl flex items-center justify-center gap-2"
         >
           <span>Suscribirse</span>
           <span class="spinner"></span>
@@ -37,25 +37,25 @@ export function renderNewsletterForm(variant = 'hero', formId = 'form-hero') {
   // Default: Hero variant
   return `
     <form id="${formId}" class="w-full group" novalidate>
-      <div class="flex flex-col gap-6">
+      <div class="flex flex-col gap-4">
         <div class="w-full relative">
-          <label for="${formId}-email" class="label-editorial text-primary/50 mb-2 block">Recibe mis apuntes</label>
+          <label for="${formId}-email" class="label-editorial text-neutral-200/30 mb-2 block">Recibe mis apuntes</label>
           <input
             id="${formId}-email"
             type="email"
             placeholder="Ingresa tu correo"
             required
             aria-label="Correo electrónico"
-            class="input-editorial w-full py-3 text-lg font-serif"
+            class="input-glass w-full py-3 px-4 text-base font-serif rounded-xl"
           >
         </div>
         <button
           type="submit"
-          class="btn-editorial w-full py-4 font-sans text-xs tracking-editorial uppercase font-semibold flex justify-center items-center gap-2"
+          class="btn-glass w-full py-4 font-sans text-xs tracking-editorial uppercase font-semibold flex justify-center items-center gap-2 rounded-xl"
         >
           <span>Acompañar el proceso</span>
           <span class="spinner"></span>
-          <svg class="arrow-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="arrow-icon w-3.5 h-3.5 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M5 12h14"/>
             <path d="m12 5 7 7-7 7"/>
           </svg>

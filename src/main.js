@@ -2,6 +2,7 @@
  * ═══════════════════════════════════════════
  *  LA TRINCHERA — Main Entry Point
  *  Pensamiento Claro para Constructores
+ *  — Immersive AI Experience —
  * ═══════════════════════════════════════════
  */
 
@@ -22,6 +23,8 @@ import { bindNewsletterForm } from './components/NewsletterForm.js';
 
 // ── Utilities ──
 import { initScrollReveal, revealVisibleElements, initMotionTrack, initSmoothScroll, initImmersiveFade } from './utils/animations.js';
+import { initParticles } from './utils/particles.js';
+import { initCursorGlow } from './utils/cursor.js';
 
 /**
  * Compose the full page from components
@@ -39,6 +42,15 @@ function renderApp() {
 
     <!-- Paper Grain Texture -->
     ${renderPaperTexture()}
+
+    <!-- Mesh Gradient Background -->
+    <div class="mesh-gradient" aria-hidden="true"></div>
+
+    <!-- Particle Canvas -->
+    <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+    <!-- Cursor Glow -->
+    <div id="cursor-glow" aria-hidden="true"></div>
 
     <!-- Page Content -->
     <div class="relative z-10">
@@ -77,6 +89,12 @@ function initApp() {
 
   // 6. Immersive section fade on scroll
   setTimeout(() => initImmersiveFade(), 1000);
+
+  // 7. Interactive particle field
+  initParticles();
+
+  // 8. Cursor glow effect (desktop only)
+  initCursorGlow();
 }
 
 // ── Bootstrap ──

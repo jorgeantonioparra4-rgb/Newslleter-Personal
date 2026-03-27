@@ -1,13 +1,14 @@
 /**
- * Preloader — Editorial loading screen
+ * Preloader — Immersive dark loading screen with animated gold bar
  */
 
 export function renderPreloader() {
   return `
     <div id="preloader">
-      <div class="text-[11px] tracking-editorial text-primary uppercase font-sans font-medium">
+      <div class="text-[11px] tracking-editorial text-neutral-200/60 uppercase font-sans font-medium">
         Calibrando Prensa...
       </div>
+      <div class="preloader-bar"></div>
     </div>
   `;
 }
