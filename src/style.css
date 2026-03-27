@@ -1,0 +1,195 @@
+/* ========================================
+   LA TRINCHERA — Design System Stylesheet
+   ======================================== */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base Layer ── */
+@layer base {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Text Selection: Wine Red with Beige text */
+  ::selection {
+    background-color: #722F37;
+    color: #F5F0E6;
+  }
+}
+
+/* ── Component Layer ── */
+@layer components {
+
+  /* Paper Grain Texture — very subtle editorial effect */
+  .bg-noise {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0.02;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+
+  /* Ghost Border Input — editorial text field */
+  .input-editorial {
+    @apply bg-transparent border-0 border-b border-primary/15 rounded-none text-primary;
+    transition: all 0.4s ease;
+  }
+  .input-editorial:focus {
+    @apply outline-none border-b-2 border-primary;
+  }
+  .input-editorial::placeholder {
+    @apply text-primary/40;
+  }
+
+  /* Monolith Button — no rounded corners, tonal shift */
+  .btn-editorial {
+    @apply bg-primary text-white rounded-none;
+    transition: background-color 0.5s ease-in-out;
+  }
+  .btn-editorial:hover {
+    @apply bg-secondary;
+  }
+
+  /* Tonal Lift — soft elevation without hard shadows */
+  .tonal-lift {
+    box-shadow: 0 20px 50px rgba(29, 28, 22, 0.04);
+  }
+
+  /* Label Editorial — micro uppercase label */
+  .label-editorial {
+    @apply text-[10px] uppercase tracking-editorial font-sans font-semibold;
+  }
+}
+
+/* ── Utility Layer ── */
+@layer utilities {
+
+  /* Immersive Section Fade — scroll-driven opacity + parallax */
+  .immersive-fade {
+    will-change: opacity, transform;
+    transition: opacity 0.1s linear, transform 0.1s linear;
+  }
+
+  /* Reveal Animation — fade-up on scroll */
+  .reveal-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-up.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Stagger delays for sequential animations */
+  .delay-100 { transition-delay: 100ms; }
+  .delay-200 { transition-delay: 200ms; }
+  .delay-300 { transition-delay: 300ms; }
+  .delay-400 { transition-delay: 400ms; }
+  .delay-500 { transition-delay: 500ms; }
+  .delay-600 { transition-delay: 600ms; }
+  .delay-700 { transition-delay: 700ms; }
+}
+
+/* ── Preloader ── */
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: #F5F0E6;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+}
+#preloader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ── Motion Track (scroll progress bar) ── */
+#motion-track {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 0;
+  z-index: 40;
+  transition: height 75ms ease-out;
+}
+
+/* ── Toast Notification ── */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1rem;
+  right: 1rem;
+  z-index: 60;
+  padding: 1rem 1.5rem;
+  font-size: 0.85rem;
+  font-family: 'Manrope', sans-serif;
+  border-left: 3px solid #D4AF37;
+  background: #1A2B49;
+  color: #F5F0E6;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.toast.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+@media (min-width: 640px) {
+  .toast {
+    left: auto;
+    right: 2rem;
+    bottom: 2rem;
+    max-width: 360px;
+  }
+}
+.toast.error {
+  border-left-color: #722F37;
+}
+
+/* ── Form States ── */
+.form-loading .btn-editorial {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.form-loading .spinner {
+  display: inline-block;
+}
+.spinner {
+  display: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Smooth scrollbar (Webkit) ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F5F0E6;
+}
+::-webkit-scrollbar-thumb {
+  background: #1A2B49;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #722F37;
+}
