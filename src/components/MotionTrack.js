@@ -1,7 +1,7 @@
 /**
- * MotionTrack — Gold scroll progress bar on the left edge (signature component)
+ * MotionTrack Component — Scroll progress indicator
  */
 
 export function renderMotionTrack() {
-  return `<div id="motion-track" class="bg-tertiary"></div>`;
+  return `<div id="motion-track" aria-hidden="true"></div>`;
 }

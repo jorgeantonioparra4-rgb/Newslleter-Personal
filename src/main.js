@@ -2,7 +2,7 @@
  * ═══════════════════════════════════════════
  *  LA TRINCHERA — Main Entry Point
  *  Pensamiento Claro para Constructores
- *  — Immersive AI Experience —
+ *  — Immersive Experience —
  * ═══════════════════════════════════════════
  */
 
@@ -23,15 +23,17 @@ import { bindNewsletterForm } from './components/NewsletterForm.js';
 
 // ── Utilities ──
 import { initScrollReveal, revealVisibleElements, initMotionTrack, initSmoothScroll, initImmersiveFade } from './utils/animations.js';
-import { initParticles } from './utils/particles.js';
-import { initCursorGlow } from './utils/cursor.js';
+import { isMobile } from './utils/dom.js';
 
 /**
  * Compose the full page from components
+ * MOBILE OPTIMIZATION: Skip heavy decorative elements on mobile
  */
 function renderApp() {
   const app = document.getElementById('app');
   if (!app) return;
+
+  const mobile = isMobile();
 
   app.innerHTML = `
     <!-- Preloader -->
@@ -40,17 +42,19 @@ function renderApp() {
     <!-- Motion Track (Scroll Progress) -->
     ${renderMotionTrack()}
 
-    <!-- Paper Grain Texture -->
+    <!-- Paper Grain Texture — static on mobile, no animation -->
     ${renderPaperTexture()}
 
-    <!-- Mesh Gradient Background -->
+    ${!mobile ? `
+    <!-- Mesh Gradient Background (desktop only) -->
     <div class="mesh-gradient" aria-hidden="true"></div>
 
-    <!-- Particle Canvas -->
+    <!-- Particle Canvas (desktop only) -->
     <canvas id="particle-canvas" aria-hidden="true"></canvas>
 
-    <!-- Cursor Glow -->
+    <!-- Cursor Glow (desktop only) -->
     <div id="cursor-glow" aria-hidden="true"></div>
+    ` : ''}
 
     <!-- Page Content -->
     <div class="relative z-10">
@@ -68,15 +72,17 @@ function renderApp() {
  * Initialize all interactive behaviors after render
  */
 function initApp() {
+  const mobile = isMobile();
+
   // 1. Bind newsletter forms (both hero and CTA)
   bindNewsletterForm('form-hero');
   bindNewsletterForm('form-cta');
 
   // 2. Dismiss preloader, then reveal visible elements
-  dismissPreloader(800);
+  dismissPreloader(600);
   setTimeout(() => {
     revealVisibleElements();
-  }, 900);
+  }, 700);
 
   // 3. Start scroll-based animations
   initScrollReveal();
@@ -87,14 +93,19 @@ function initApp() {
   // 5. Smooth scroll for anchor links
   initSmoothScroll();
 
-  // 6. Immersive section fade on scroll
-  setTimeout(() => initImmersiveFade(), 1000);
+  // 6. Immersive section fade on scroll (lighter on mobile)
+  setTimeout(() => initImmersiveFade(), 800);
 
-  // 7. Interactive particle field
-  initParticles();
-
-  // 8. Cursor glow effect (desktop only)
-  initCursorGlow();
+  // 7-8. Desktop-only effects
+  if (!mobile) {
+    // Dynamically import heavy modules only on desktop
+    import('./utils/particles.js').then(({ initParticles }) => {
+      initParticles();
+    });
+    import('./utils/cursor.js').then(({ initCursorGlow }) => {
+      initCursorGlow();
+    });
+  }
 }
 
 // ── Bootstrap ──

@@ -1,11 +1,29 @@
 /**
- * DOM Utilities — helper functions for component rendering
+ * DOM Utilities — helper functions for component rendering & selection
  */
 
 /**
- * Creates an HTML element from a template string and returns it
- * @param {string} html - HTML string to parse
- * @returns {HTMLElement}
+ * Query selector shorthand
+ */
+export const $ = (selector) => document.querySelector(selector);
+export const $$ = (selector) => document.querySelectorAll(selector);
+
+/**
+ * Selects an element within a given scope
+ */
+export function qs(selector, scope = document) {
+  return scope.querySelector(selector);
+}
+
+/**
+ * Selects all matching elements within a given scope
+ */
+export function qsa(selector, scope = document) {
+  return scope.querySelectorAll(selector);
+}
+
+/**
+ * Creates an HTML element from a template string
  */
 export function createElement(html) {
   const template = document.createElement('template');
@@ -14,30 +32,22 @@ export function createElement(html) {
 }
 
 /**
- * Mounts a component's HTML into a container
- * @param {HTMLElement} container - Target DOM element
- * @param {string} html - HTML string to insert
+ * Mounts HTML into a container
  */
 export function mount(container, html) {
   container.insertAdjacentHTML('beforeend', html);
 }
 
 /**
- * Selects an element within a given scope
- * @param {string} selector
- * @param {HTMLElement} scope
- * @returns {HTMLElement|null}
+ * Check if device is mobile
  */
-export function qs(selector, scope = document) {
-  return scope.querySelector(selector);
+export function isMobile() {
+  return window.innerWidth < 768 || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 }
 
 /**
- * Selects all matching elements within a given scope
- * @param {string} selector
- * @param {HTMLElement} scope
- * @returns {NodeListOf<HTMLElement>}
+ * Check if user prefers reduced motion
  */
-export function qsa(selector, scope = document) {
-  return scope.querySelectorAll(selector);
+export function prefersReducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }

@@ -1,27 +1,26 @@
 /**
- * Preloader — Immersive dark loading screen with animated gold bar
+ * Preloader Component — Loading overlay with bar animation
  */
 
 export function renderPreloader() {
   return `
     <div id="preloader">
-      <div class="text-[11px] tracking-editorial text-neutral-200/60 uppercase font-sans font-medium">
-        Calibrando Prensa...
-      </div>
+      <span class="text-sm font-sans font-bold uppercase tracking-editorial text-neutral-300/60">La Trinchera</span>
       <div class="preloader-bar"></div>
     </div>
   `;
 }
 
 /**
- * Dismiss the preloader with a fade-out animation
- * @param {number} delay - ms before starting fade
+ * Dismiss preloader with a fade-out
+ * @param {number} delay - ms before dismissing
  */
-export function dismissPreloader(delay = 800) {
-  const preloader = document.getElementById('preloader');
-  if (!preloader) return;
-
+export function dismissPreloader(delay = 600) {
   setTimeout(() => {
-    preloader.classList.add('hidden');
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+      preloader.classList.add('hidden');
+      setTimeout(() => preloader.remove(), 800);
+    }
   }, delay);
 }

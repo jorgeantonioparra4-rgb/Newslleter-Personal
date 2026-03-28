@@ -1,5 +1,5 @@
 /**
- * PaperTexture — Subtle grain overlay for editorial aesthetics
+ * PaperTexture Component — SVG noise overlay for editorial feel
  */
 
 export function renderPaperTexture() {

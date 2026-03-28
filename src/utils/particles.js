@@ -1,9 +1,14 @@
 /**
  * Particles — Interactive floating particle field
- * Creates an ambient, AI-powered feel with subtle moving dots
+ * DESKTOP ONLY: Completely disabled on mobile/touch devices.
+ * Uses visibility API to pause when tab is not visible.
  */
 
+import { isMobile } from './dom.js';
+
 export function initParticles() {
+  if (isMobile()) return;
+
   const canvas = document.getElementById('particle-canvas');
   if (!canvas) return;
 
@@ -11,6 +16,7 @@ export function initParticles() {
   let particles = [];
   let mouse = { x: -1000, y: -1000 };
   let animId;
+  let isVisible = true;
 
   function resize() {
     canvas.width = window.innerWidth;
@@ -19,8 +25,7 @@ export function initParticles() {
 
   function createParticles() {
     particles = [];
-    // Limit particle count based on viewport
-    const count = Math.min(Math.floor((canvas.width * canvas.height) / 18000), 60);
+    const count = Math.min(Math.floor((canvas.width * canvas.height) / 30000), 35);
     for (let i = 0; i < count; i++) {
       particles.push({
         x: Math.random() * canvas.width,
@@ -29,82 +34,80 @@ export function initParticles() {
         vy: (Math.random() - 0.5) * 0.3,
         radius: Math.random() * 1.5 + 0.5,
         alpha: Math.random() * 0.4 + 0.1,
-        // Gold or white particles
         color: Math.random() > 0.7 ? '212, 175, 55' : '245, 240, 230',
       });
     }
   }
 
   function animate() {
+    if (!isVisible) {
+      animId = requestAnimationFrame(animate);
+      return;
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    particles.forEach((p, i) => {
-      // Update position with ultra-smooth drifting
+    const len = particles.length;
+    for (let i = 0; i < len; i++) {
+      const p = particles[i];
+
       p.x += p.vx;
       p.y += p.vy;
 
-      // Mouse interaction: subtle attraction + repulsion based on distance
       const dx = p.x - mouse.x;
       const dy = p.y - mouse.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+      const distSq = dx * dx + dy * dy;
       
-      if (dist < 200) {
+      if (distSq < 40000) {
+        const dist = Math.sqrt(distSq);
         const force = (200 - dist) / 200;
-        // Subtle magnetic pull towards the mouse glow
         p.vx -= (dx / dist) * force * 0.015;
         p.vy -= (dy / dist) * force * 0.015;
       }
 
-      // Very slight ambient drift normalization
       p.vx = Math.max(Math.min(p.vx, 0.6), -0.6);
       p.vy = Math.max(Math.min(p.vy, 0.6), -0.6);
 
-      // Wrap around edges comfortably
       const margin = 50;
       if (p.x < -margin) p.x = canvas.width + margin;
       if (p.x > canvas.width + margin) p.x = -margin;
       if (p.y < -margin) p.y = canvas.height + margin;
       if (p.y > canvas.height + margin) p.y = -margin;
 
-      // Draw particle glow
-      const pulse = Math.sin(Date.now() / 1500 + i) * 0.15 + 0.85;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radius * pulse, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${p.color}, ${p.alpha * pulse})`;
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
       ctx.fill();
 
-      // Draw intelligent connections
-      for (let j = i + 1; j < particles.length; j++) {
+      for (let j = i + 1; j < len; j++) {
         const p2 = particles[j];
         const connDx = p.x - p2.x;
         const connDy = p.y - p2.y;
-        const connDist = Math.sqrt(connDx * connDx + connDy * connDy);
+        const connDistSq = connDx * connDx + connDy * connDy;
 
-        if (connDist < 150) {
-          const opacity = (1 - connDist / 150) * 0.12;
+        if (connDistSq < 12100) {
+          const connDist = Math.sqrt(connDistSq);
+          const opacity = (1 - connDist / 110) * 0.1;
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(p2.x, p2.y);
-          
-          // Gradient-like connection
-          const gradient = ctx.createLinearGradient(p.x, p.y, p2.x, p2.y);
-          gradient.addColorStop(0, `rgba(${p.color}, ${opacity})`);
-          gradient.addColorStop(1, `rgba(${p2.color}, ${opacity})`);
-          
-          ctx.strokeStyle = gradient;
-          ctx.lineWidth = 0.6 * (1 - connDist / 150);
+          ctx.strokeStyle = `rgba(212, 175, 55, ${opacity})`;
+          ctx.lineWidth = 0.5;
           ctx.stroke();
         }
       }
-    });
+    }
 
     animId = requestAnimationFrame(animate);
   }
 
-  // Events
+  let resizeTimeout;
   window.addEventListener('resize', () => {
-    resize();
-    createParticles();
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      resize();
+      createParticles();
+    }, 250);
   });
 
   window.addEventListener('mousemove', (e) => {
@@ -112,7 +115,10 @@ export function initParticles() {
     mouse.y = e.clientY;
   }, { passive: true });
 
-  // Init
+  document.addEventListener('visibilitychange', () => {
+    isVisible = !document.hidden;
+  });
+
   resize();
   createParticles();
   animate();

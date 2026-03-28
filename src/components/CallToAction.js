@@ -1,29 +1,44 @@
 /**
- * CallToAction — Immersive glass CTA with orbs and gradient
+ * Call To Action Component — bottom newsletter signup
  */
 
-import { renderNewsletterForm } from './NewsletterForm.js';
+import { isMobile } from '../utils/dom.js';
 
 export function renderCallToAction() {
+  const mobile = isMobile();
+  const orbSize1 = mobile ? '200px' : '400px';
+  const orbSize2 = mobile ? '150px' : '300px';
+
   return `
-    <section id="cta" class="immersive-fade py-24 sm:py-32 md:py-40 px-6 sm:px-8 md:px-16 relative overflow-hidden">
-      <!-- Orbs -->
-      <div class="orb orb-gold w-[500px] h-[500px] -top-40 left-1/2 -translate-x-1/2 animate-float opacity-40" aria-hidden="true"></div>
-      <div class="orb orb-wine w-[300px] h-[300px] bottom-0 -left-20 animate-float-delayed opacity-30" aria-hidden="true"></div>
+    <section id="cta" class="immersive-fade relative py-20 md:py-32 px-6 overflow-hidden">
+      <div class="orb orb-gold" style="width: ${orbSize1}; height: ${orbSize1}; bottom: -15%; right: -10%;" aria-hidden="true"></div>
+      <div class="orb orb-wine" style="width: ${orbSize2}; height: ${orbSize2}; top: -15%; left: -5%;" aria-hidden="true"></div>
 
-      <!-- Section divider -->
-      <div class="section-divider w-1/3 mb-16 sm:mb-24"></div>
-
-      <div class="max-w-3xl mx-auto relative z-10 reveal-up flex flex-col items-center text-center">
-        <div class="glass-card-elevated glow-border rounded-3xl px-8 py-12 sm:px-12 sm:py-16 md:px-16 md:py-20 w-full">
-          <h2 class="text-3xl sm:text-5xl md:text-6xl font-serif italic font-light mb-6 sm:mb-8 text-neutral-200">
-            Únete a la bitácora.
+      <div class="max-w-2xl mx-auto text-center relative z-10">
+        <div class="reveal-up">
+          <span class="label-editorial text-tertiary/60 block mb-4">¿Empezamos?</span>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-serif font-semibold leading-tight tracking-tightest mb-8">
+            Toma asiento en<br>
+            <span class="text-gradient-gold italic">la trinchera.</span>
           </h2>
-          <p class="font-sans font-light text-neutral-200/50 mb-10 sm:mb-14 max-w-md mx-auto leading-relaxed text-sm sm:text-base">
-            Un correo a la semana con mis apuntes desde el barro. Sin fórmulas mágicas, solo el proceso crudo.
-          </p>
-          
-          ${renderNewsletterForm('cta', 'form-cta')}
+        </div>
+
+        <div class="reveal-up delay-300 glass-card glow-border rounded-2xl p-8 md:p-10">
+          <form id="form-cta" class="space-y-4">
+            <input
+              type="email"
+              name="email"
+              placeholder="Tu correo electrónico"
+              required
+              class="input-glass w-full px-4 py-3 text-base text-center"
+              autocomplete="email"
+            >
+            <button type="submit" class="btn-glass w-full py-3 px-6 flex items-center justify-center gap-2 text-sm uppercase tracking-editorial font-semibold">
+              <span>Quiero construir con claridad</span>
+              <span class="spinner"></span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+          </form>
         </div>
       </div>
     </section>

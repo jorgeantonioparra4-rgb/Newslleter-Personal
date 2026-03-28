@@ -1,48 +1,61 @@
 /**
- * Hero — Immersive landing with floating orbs, gradient text, glass form
+ * Hero Component — Main headline + newsletter form
+ * "Experiencia impulsada por IA" badge REMOVED per user request
  */
 
-import { renderNewsletterForm } from './NewsletterForm.js';
+import { isMobile } from '../utils/dom.js';
 
 export function renderHero() {
-  return `
-    <header id="hero" class="immersive-fade min-h-screen flex flex-col justify-center px-6 sm:px-8 md:px-16 relative pt-24 md:pt-0">
-      
-      <!-- Floating Orbs -->
-      <div class="orb orb-gold w-[400px] h-[400px] -top-20 -left-40 animate-float opacity-60" aria-hidden="true"></div>
-      <div class="orb orb-wine w-[300px] h-[300px] top-1/3 -right-20 animate-float-delayed opacity-40" aria-hidden="true"></div>
-      <div class="orb orb-blue w-[500px] h-[500px] -bottom-40 left-1/3 animate-float-slow opacity-30" aria-hidden="true"></div>
+  const mobile = isMobile();
+  const orbSize1 = mobile ? '200px' : '400px';
+  const orbSize2 = mobile ? '150px' : '300px';
 
-      <div class="max-w-7xl w-full mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-center relative z-10">
-        
-        <!-- Left Column: Imposing Headline -->
-        <div class="md:col-span-7 reveal-up delay-300">
-          <div class="inline-flex items-center gap-2 glass-card rounded-full px-4 py-1.5 mb-8">
-            <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
-            <span class="text-[10px] uppercase tracking-editorial font-sans text-neutral-200/60">Experiencia impulsada por IA</span>
-          </div>
-          <h1 class="font-serif text-[2.5rem] sm:text-[3.5rem] md:text-[5.5rem] lg:text-[7rem] leading-[0.95] tracking-tightest">
-            <span class="text-neutral-200">Construir exige</span><br />
-            <span class="italic text-gradient-gold">claridad.</span>
+  return `
+    <section id="hero" class="immersive-fade relative min-h-screen flex items-center justify-center px-6 py-20 md:py-0 overflow-hidden">
+      <!-- Orbs — smaller on mobile, no animation on mobile (CSS handles it) -->
+      <div class="orb orb-gold" style="width: ${orbSize1}; height: ${orbSize1}; top: -10%; right: -5%;" aria-hidden="true"></div>
+      <div class="orb orb-wine" style="width: ${orbSize2}; height: ${orbSize2}; bottom: -10%; left: -5%;" aria-hidden="true"></div>
+
+      <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10">
+        <!-- Left: Headline -->
+        <div class="reveal-up">
+          <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif font-semibold leading-[0.95] tracking-tightest">
+            Construir<br>exige<br>
+            <span class="text-gradient-gold italic">claridad.</span>
           </h1>
         </div>
-        
-        <!-- Right Column: Context & Capture -->
-        <div class="md:col-span-5 flex flex-col justify-center reveal-up delay-500">
-          <div class="glass-card-elevated rounded-2xl p-6 sm:p-8">
-            <p class="text-base sm:text-lg text-neutral-200/70 font-serif leading-relaxed mb-8">
+
+        <!-- Right: Newsletter Form -->
+        <div class="reveal-up delay-300 flex justify-center lg:justify-end">
+          <div class="glass-card glow-border rounded-2xl p-8 md:p-10 max-w-md w-full">
+            <p class="text-lg md:text-xl font-serif text-neutral-300 leading-relaxed mb-6">
               Cartas semanales sobre cómo caigo, pero también sobre cómo levantarse si se está disperso.
             </p>
-            ${renderNewsletterForm('hero', 'form-hero')}
+            <form id="form-hero" class="space-y-4">
+              <label class="label-editorial text-neutral-300/60 block mb-1">Recibe mis apuntes</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Ingresa tu correo"
+                required
+                class="input-glass w-full px-4 py-3 text-base"
+                autocomplete="email"
+              >
+              <button type="submit" class="btn-glass w-full py-3 px-6 flex items-center justify-center gap-2 text-sm uppercase tracking-editorial font-semibold">
+                <span>Acompañar el proceso</span>
+                <span class="spinner"></span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </button>
+            </form>
           </div>
         </div>
       </div>
 
-      <!-- Scroll indicator -->
+      <!-- Scroll Indicator -->
       <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 reveal-up delay-700">
-        <span class="text-[9px] uppercase tracking-editorial text-neutral-200/30 font-sans">Descubre más</span>
-        <div class="w-[1px] h-8 bg-gradient-to-b from-tertiary/40 to-transparent"></div>
+        <span class="label-editorial text-neutral-300/40">Descubre más</span>
+        <div class="w-px h-8 bg-gradient-to-b from-tertiary/40 to-transparent"></div>
       </div>
-    </header>
+    </section>
   `;
 }

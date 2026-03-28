@@ -1,8 +1,10 @@
 /**
  * Animations — Intersection Observer scroll reveals + Motion Track
+ * Optimized for mobile: reduced animation complexity, passive listeners,
+ * and throttled scroll handlers.
  */
 
-import { qsa, qs } from './dom.js';
+import { qsa, qs, isMobile, prefersReducedMotion } from './dom.js';
 
 /**
  * Initialize scroll-based reveal animations using IntersectionObserver
@@ -23,7 +25,6 @@ export function initScrollReveal() {
     });
   }, observerOptions);
 
-  // Observe all reveal elements
   qsa('.reveal-up').forEach((el) => observer.observe(el));
 }
 
@@ -75,12 +76,23 @@ export function initSmoothScroll() {
 
 /**
  * Immersive Section Fade — scroll-driven opacity + subtle parallax
- * Sections fade in as they enter the viewport and fade out as they leave upward
+ * MOBILE OPTIMIZATION: On mobile, uses a simpler opacity-only approach
+ * with no translateY transforms to avoid expensive repaints.
  */
 export function initImmersiveFade() {
   const sections = qsa('.immersive-fade');
   if (!sections.length) return;
 
+  // Skip entirely if user prefers reduced motion
+  if (prefersReducedMotion()) {
+    sections.forEach(s => {
+      s.style.opacity = '1';
+      s.style.transform = 'none';
+    });
+    return;
+  }
+
+  const mobile = isMobile();
   let ticking = false;
 
   const updateFade = () => {
@@ -88,37 +100,32 @@ export function initImmersiveFade() {
 
     sections.forEach((section) => {
       const rect = section.getBoundingClientRect();
-      const sectionHeight = rect.height;
-
-      // Calculate how much of the section is visible
-      // Enter zone: bottom of section entering viewport from below
-      // Exit zone: top of section leaving viewport upward
       let opacity = 1;
       let translateY = 0;
 
       // Entering from bottom (fade in)
       if (rect.top > vh * 0.3) {
-        // Section is below viewport threshold — fade out
         const progress = Math.min((rect.top - vh * 0.3) / (vh * 0.5), 1);
         opacity = 1 - progress;
-        translateY = progress * 30;
+        if (!mobile) translateY = progress * 30;
       }
       // Leaving from top (fade out)
       else if (rect.bottom < vh * 0.4 && rect.bottom > 0) {
         const progress = 1 - (rect.bottom / (vh * 0.4));
-        opacity = 1 - progress * 0.7; // Don't fully disappear
-        translateY = -(progress * 15);
+        opacity = 1 - progress * 0.7;
+        if (!mobile) translateY = -(progress * 15);
       }
       // Fully above viewport
       else if (rect.bottom <= 0) {
         opacity = 0.3;
       }
 
-      // Clamp
       opacity = Math.max(0.05, Math.min(1, opacity));
 
       section.style.opacity = opacity;
-      section.style.transform = `translateY(${translateY}px)`;
+      if (!mobile) {
+        section.style.transform = `translateY(${translateY}px)`;
+      }
     });
 
     ticking = false;
@@ -131,6 +138,5 @@ export function initImmersiveFade() {
     }
   }, { passive: true });
 
-  // Initial render
   updateFade();
 }
