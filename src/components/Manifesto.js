@@ -12,7 +12,7 @@ export function renderManifesto() {
         <div class="reveal-up flex justify-center">
           <div class="glass-card rounded-2xl p-3 max-w-sm w-full">
             <img
-              src="/images/jorge.jpg"
+              src="/jorge.jpg"
               alt="Jorge — La Trinchera"
               loading="lazy"
               decoding="async"
