@@ -83,11 +83,12 @@ export function initImmersiveFade() {
   const sections = qsa('.immersive-fade');
   if (!sections.length) return;
 
-  // Skip entirely if user prefers reduced motion
-  if (prefersReducedMotion()) {
+  // Skip entirely if user prefers reduced motion or is on mobile
+  if (prefersReducedMotion() || isMobile()) {
     sections.forEach(s => {
       s.style.opacity = '1';
       s.style.transform = 'none';
+      s.style.transition = 'none';
     });
     return;
   }
