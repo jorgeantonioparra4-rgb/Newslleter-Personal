@@ -19,6 +19,7 @@ export default async function handler(req, res) {
   try {
     const payload = {
       email: email,
+      groups: ["183316726755100119"],
     };
 
     const response = await fetch('https://connect.mailerlite.com/api/subscribers', {
