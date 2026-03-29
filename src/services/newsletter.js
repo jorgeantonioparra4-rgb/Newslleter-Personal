@@ -13,7 +13,7 @@
 const NEWSLETTER_CONFIG = {
   // Set to your API endpoint when ready
   // Example: 'https://api.beehiiv.com/v2/publications/xxx/subscriptions'
-  endpoint: null,
+  endpoint: '/api/subscribe',
 
   // HTTP method for the API call
   method: 'POST',
@@ -55,14 +55,16 @@ export async function subscribeEmail(email) {
       body: JSON.stringify(NEWSLETTER_CONFIG.buildPayload(email)),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+      throw new Error(data.error || 'Error de suscripción');
     }
 
     return { success: true, message: '¡Bienvenido a La Trinchera! Revisa tu correo.' };
   } catch (error) {
     console.error('[Newsletter] Subscription error:', error);
-    return { success: false, message: 'Error al suscribirse. Intenta de nuevo.' };
+    return { success: false, message: error.message || 'Error al suscribirse. Intenta de nuevo.' };
   }
 }
 
